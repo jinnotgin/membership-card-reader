@@ -1,47 +1,67 @@
 <script lang="ts">
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  import QRScanner from './lib/QRScanner.svelte'
+  import AutoCloseModal from './lib/AutoCloseModal.svelte'
+
+  let showModal = false;
+  let modalData = {
+    type: "success",
+    message: "-",
+  }
+  function handleCloseModal(event) {
+    console.log("clsoe modal")
+    showModal = false;
+  }
+
+	function handleQrCodeText(event) {
+    if (showModal) return;
+
+    try {
+      const {name = false, id = false} = JSON.parse(event.detail.text);
+      if (!name || !id) throw "Incomplete data."
+
+      modalData = {
+        type: "success",
+        message: `Welcome, ${name}!`,
+      }
+      showModal = true;
+    } catch (error) {
+      modalData = {
+        type: "error",
+        message: `Invalid QR Code, please try again.`,
+      }
+      showModal = true;
+    }
+	}
+
 </script>
 
 <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
+  <h1>Please Scan your Membership Card</h1>
 
-  <div class="card">
-    <Counter />
+  <div class="video">
+    <QRScanner on:qrCodeText={handleQrCodeText}/>
   </div>
 
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
+  <AutoCloseModal {showModal} {...modalData} on:closeModal={handleCloseModal}>
+    <span class="modal-title">{modalData.message}</span>
+  </AutoCloseModal>
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  main {
+    width: 100svw;
+    height: 95svh;
+    display: flex;
+    flex-direction: column;
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+  h1 {
+    font-size: 2em;;
   }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
+  span.modal-title {
+    font-size: 10vmin;
+    font-weight: 600;
   }
-  .read-the-docs {
-    color: #888;
+  div.video {
+    flex-grow: 1;
   }
 </style>
