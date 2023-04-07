@@ -69,9 +69,6 @@
     width: 100svw;
     position: relative;
   }
-  h1 {
-    font-size: 2em;;
-  }
   span.modal-title {
     font-size: 10vmin;
     font-weight: 600;
