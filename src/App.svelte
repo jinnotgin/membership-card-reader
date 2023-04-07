@@ -12,6 +12,7 @@
   function handleCloseModal(event) {
     showModal = false;
   }
+  
   function playAudio(audioElem) {
     if (!audioElem.paused) {
       audioElem.pause();
@@ -20,7 +21,7 @@
     audioElem.play();
   }
 
-	function handleQrCodeText(event) {
+  function handleQrCodeText(event) {
     if (showModal) return;
 
     try {
@@ -32,7 +33,6 @@
         message: `Welcome, ${name}!`,
       }
       showModal = true;
-      // playAudio("success");
       playAudio(audioSuccess);
     } catch (error) {
       modalData = {
