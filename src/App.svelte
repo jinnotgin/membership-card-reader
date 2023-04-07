@@ -42,7 +42,7 @@
       showModal = true;
       playAudio(audioError);
     }
-	}
+  }
 
 </script>
 
