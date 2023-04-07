@@ -1,6 +1,8 @@
 <script lang="ts">
   import QRScanner from './lib/QRScanner.svelte'
   import AutoCloseModal from './lib/AutoCloseModal.svelte'
+  let audioSuccess;
+  let audioError;
 
   let showModal = false;
   let modalData = {
@@ -9,6 +11,13 @@
   }
   function handleCloseModal(event) {
     showModal = false;
+  }
+  function playAudio(audioElem) {
+    if (!audioElem.paused) {
+      audioElem.pause();
+      audioElem.currentTime = 0;
+    }
+    audioElem.play();
   }
 
 	function handleQrCodeText(event) {
@@ -23,12 +32,15 @@
         message: `Welcome, ${name}!`,
       }
       showModal = true;
+      // playAudio("success");
+      playAudio(audioSuccess);
     } catch (error) {
       modalData = {
         type: "error",
-        message: `Invalid QR Code, please try again.`,
+        message: `Invalid QR Code.`,
       }
       showModal = true;
+      playAudio(audioError);
     }
 	}
 
@@ -42,6 +54,13 @@
   <AutoCloseModal {showModal} {...modalData} on:closeModal={handleCloseModal}>
     <span class="modal-title">{modalData.message}</span>
   </AutoCloseModal>
+
+  <audio autoplay playsinline bind:this={audioSuccess}>
+    <source src="sounds/success.mp3" type="audio/mpeg">
+  </audio>
+  <audio autoplay playsinline bind:this={audioError}>
+    <source src="sounds/error.mp3" type="audio/mpeg">
+  </audio>
 </main>
 
 <style>
