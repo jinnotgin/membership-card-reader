@@ -1,4 +1,6 @@
 <script lang="ts">
+  export let fullscreen = false;
+
 	import jsQR from 'jsqr';
 	import { onMount, createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
@@ -42,38 +44,61 @@
 </script>
 
 <div class="qrScanner">
-  {#if status === CONSTANTS.NO_PERMISSION}
-    <p>Error: No camera permission given.</p>
-  {:else if status === CONSTANTS.PENDING_PERMISSION}
-    <p>Waiting for user to provide camera permission...</p>
-  {/if}
-  <video bind:this={video} autoplay></video>
+  <video class:fullscreen bind:this={video} autoplay></video>
   <canvas bind:this={canvas} style="display:none;"></canvas>
-	<div class="scanAreaOverlay">
+	<div class="overlay">
 		<div class="dottedBox"></div>
+		{#if status === CONSTANTS.NO_PERMISSION}
+    	<p class="instructions">❌ Error: No camera permission given.</p>
+		{:else if status === CONSTANTS.PENDING_PERMISSION}
+			<p class="instructions">🧐 Waiting for user to provide camera permission...</p>
+		{:else}
+			<p class="instructions">Align QR Code within frame to scan</p>
+		{/if}
 	</div>
 </div>
 
 <style>
-	div.qrScanner {
+	.qrScanner {
 		text-align: center;
     position: relative;
 	}
-	div.qrScanner, video,canvas {
+	.qrScanner, video,canvas {
 		height: 100%;
 		width: auto;
 	}
-	div.scanAreaOverlay {
+	video.fullscreen {
+		position: fixed;
+		top: 0;
+		left: 0;
+		min-width: 100%;
+		min-height: 100%;
+		object-fit: cover;
+		z-index: -1;
+	}
+	.overlay {
 		position: absolute;
 		inset: 0;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+    z-index: 2;
 	}
-	div.scanAreaOverlay div.dottedBox {
+	.overlay .dottedBox {
+		margin-top: 3%;
 		border: 5px dotted white;
 		border-radius: 1em;
-		height: 75%;
+		height: 65%;
 		aspect-ratio: 1;
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.7);
+    z-index: 3;
+	}
+	.instructions {
+		margin-top: 3%;
+		color: white;
+		font-size: 2rem;
+		font-weight: 600;
+    z-index: 3;
 	}
 </style>

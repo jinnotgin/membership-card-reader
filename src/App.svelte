@@ -5,10 +5,9 @@
   let showModal = false;
   let modalData = {
     type: "success",
-    message: "-",
+    message: "You're not supposed to see this!",
   }
   function handleCloseModal(event) {
-    console.log("clsoe modal")
     showModal = false;
   }
 
@@ -36,10 +35,8 @@
 </script>
 
 <main>
-  <h1>Please Scan your Membership Card</h1>
-
-  <div class="video">
-    <QRScanner on:qrCodeText={handleQrCodeText}/>
+  <div class="scanner">
+    <QRScanner fullscreen={true} on:qrCodeText={handleQrCodeText}/>
   </div>
 
   <AutoCloseModal {showModal} {...modalData} on:closeModal={handleCloseModal}>
@@ -49,10 +46,9 @@
 
 <style>
   main {
+    height: 100svh;
     width: 100svw;
-    height: 95svh;
-    display: flex;
-    flex-direction: column;
+    position: relative;
   }
   h1 {
     font-size: 2em;;
@@ -61,7 +57,8 @@
     font-size: 10vmin;
     font-weight: 600;
   }
-  div.video {
-    flex-grow: 1;
+  div.scanner {
+    height: 100%;
+    width: 100%;
   }
 </style>
