@@ -17,7 +17,7 @@
 
   let timeout_showModal;
   $: {
-    if (showModal === true) timeout_showModal = setTimeout(close, 3000);
+    if (showModal === true) timeout_showModal = setTimeout(close, 2500);
   }
 </script>
 
